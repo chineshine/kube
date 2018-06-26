@@ -1,4 +1,6 @@
-# kube
-kubernetes 相关
+# kubernetes
+kubernetes 相关知识内容
 
-安装文档 : install.md 
+install.md -> kubernetes 安装文档   
+
+ helm.md ->helm 安装以及安装 nginx-ingress controller
