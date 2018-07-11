@@ -1,0 +1,14 @@
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+etcd:
+  image: registry.xonestep.com/google_containers/etcd-amd64:3.1.12
+# 请注意此处对应安装的 kubelet 版本
+kubernetesVersion: v1.11.0
+networking:
+# flannel
+# podSubnet: 10.244.0.0/16
+# calico
+  podSubnet: 192.168.0.0/16
+imageRepository: registry.xonestep.com/google_containers
+featureGates:
+  CoreDNS: true

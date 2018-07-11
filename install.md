@@ -48,10 +48,11 @@ systemctl enable kubelet && systemctl start kubelet
 ```
 ## 初始化
 ```
-  kubeadm init
+  kubeadm init --config kubeadm.yaml
 ```
+kubeadm.yaml 注意相关配置  
 note :   
-此处使用了 k8s 相关镜像,开头为:k8s.gcr.io  
+如果不使用该配置文件,则安装会使用 k8s 相关镜像,开头为:k8s.gcr.io  
 需要翻墙下载,或事先下载好,  
 如果名称改掉了,使用配置文件,去指定镜像  
 运行成功会打印日志,类似如下 :
@@ -101,7 +102,8 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documen
 ```
 ### CALICO
 ```
-kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml
+kubectl apply -f rbac-kdd.yaml
+kubectl apply -f calico.yaml
 ```
 
 ## 相关问题解决
@@ -112,13 +114,20 @@ kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/
 ### 配置文件位置
 ```
 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
- init 之后,会一直卡住,可能某个镜像下不下来
- 使用参数指定镜像:
+```
+ init 之后,可能会一直卡住,因为某个镜像下不下来  
+ 使用参数指定镜像:  
+ ```
  Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=k8s.gcr.io/google_containers/pause-amd64:3.1"
- 将镜像'k8s.gcr.io/google_containers/pause-amd64:3.1' 替换为本地已下好的镜像
+```
+ 将镜像'k8s.gcr.io/google_containers/pause-amd64:3.1' 替换为本地已下好的镜像  
+ v1.11.0 此位置变更
+```
+ vi /etc/sysconfig/kubelet
+ KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.xonestep.com/google_containers/pause-amd64:3.1
 ```
 ### cgroup 一致
-检查 docker 使用的 cgroup
+检查 docker 使用的 cgroup  
 ```
 docker info | grep -i cgroup
 ```
@@ -126,5 +135,16 @@ docker info | grep -i cgroup
 配置文件位置 :   
 ```
 /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+## 该行
+Environment="KUBELET_CGROUP_ARGS=--cgroup-driver=cgroupfs"
 ```
-修改配置文件确保一致
+v1.11.0 默认使用的是 cgroups,且配置换了位置:
+```
+cat /var/lib/kubelet/kubeadm-flags.env
+```
+### 日志追踪查看
+```
+journalctl -u kubelet.service -af
+# 或 土一点的方式
+tail -n 100 /var/log/message
+```
