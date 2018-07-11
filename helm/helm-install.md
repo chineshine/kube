@@ -2,7 +2,7 @@
 
 #### 获取安装包
 ```
-  wget https://kubernetes-helm.storage.googleapis.com/helm-v2.8.2-linux-amd64.tar.gz
+  wget https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-rc.1-linux-amd64.tar.gz
 ```
 解压后将文件 helm 移动到 /usr/local/bin
 ```
