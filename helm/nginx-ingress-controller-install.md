@@ -13,11 +13,15 @@ fetch 下来
 ```
 在 nginx-ingress 目录里面
 ```
-  helm install stable/nginx-ingress --name nginx-ingress -f values.yaml --version 0.18.1 --set rbac.create=true
+  helm install stable/nginx-ingress --name nginx-ingress --namespace kube-system -f values.yaml --version 0.22.1 --set rbac.create=true
+```
+安装时候有时候仓库连不上,更新一下
+```
+  helm repo update
 ```
 查看安装进度 :
 ```
-  kubectl --namespace default get services -o wide -w nginx-ingress-controller
+  kubectl --namespace kube-system get services -o wide -w nginx-ingress-controller
 ```
 Note : 此处安装使用了 RBAC ,一定要加参数
 ```
