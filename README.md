@@ -4,7 +4,7 @@ kubernetes 相关知识内容
 install.md -> kubernetes 安装文档   
 kubeadm.yaml -> 安装用到的配置
 
-helm ==> helm 相关内容
+helm ==> helm 相关内容  
   helm-install --> 安装 helm 以及初始化  
   nginx-ingress-controller-install --> 安装 ingress controller  
   rbac-config.yaml --> rbac 配置文件  
