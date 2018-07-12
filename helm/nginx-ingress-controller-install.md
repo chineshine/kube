@@ -13,7 +13,7 @@ fetch 下来
 ```
 在 nginx-ingress 目录里面
 ```
-  helm install stable/nginx-ingress --name nginx-ingress --namespace kube-system -f values.yaml --version 0.22.1 --set rbac.create=true
+  helm install . --name nginx-ingress --namespace kube-system -f values.yaml --version 0.22.1 --set rbac.create=true
 ```
 安装时候有时候仓库连不上,更新一下
 ```
