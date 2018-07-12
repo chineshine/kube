@@ -9,8 +9,8 @@ helm ==> helm 相关内容
   nginx-ingress-controller-install --> 安装 ingress controller  
   rbac-config.yaml --> rbac 配置文件  
 
-gluster ==> 存储系统 gluster 相关内容
-  install -> 安装手册
+gluster ==> 存储系统 gluster 相关内容  
+  install -> 安装手册  
   issue -> 操作过程遇到的错误
 
 calico ==> calico 网络相关内容
