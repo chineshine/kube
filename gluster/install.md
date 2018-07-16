@@ -74,3 +74,29 @@ http://docs.gluster.org/en/latest/Administrator%20Guide/Split%20brain%20and%20wa
 ```
    gluster volume info paas  
 ```
+### 测试
+根据官网
+随意以其中一台机器为 client
+```
+mount -t glusterfs gluster1:/paas /mnt
+  for i in `seq -w 1 100`; do cp -rp /var/log/messages /mnt/copy-test-$i; done
+```
+check
+```
+ls -lA /mnt/copy* | wc -l
+```
+每个节点都将看到100个文件
+```
+ ls -lA /data/brick1/paas/copy*
+```
+如果没有复制,每个节点都将会只有50个文件
+
+### 官网相关地址
+github:
+```
+  https://github.com/gluster
+```
+文档:
+```
+  https://docs.gluster.org/en/latest/Quick-Start-Guide/Quickstart/
+```
