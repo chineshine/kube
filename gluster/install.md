@@ -104,13 +104,13 @@ github:
 
 
 # heketi
-假设此时操作都是在 <ip1>
+假设此时操作都是在 ``<ip1>``
 ## 安装
 ```
 yum -y install heketi heketi-client
 ```
 ### 配置 heketi.json
-此处配置文件的位置放在 /etc/heketi/heketi.json
+此处配置文件的位置放在 `/etc/heketi/heketi.json`
 ```
 {
   "_port_comment": "Heketi Server Port Number",
@@ -209,7 +209,8 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
   curl http://localhost:10001/hello
 ```
 ### heketi-cli
-1)创建 cluster
+1)创建 cluster  
+用户和密钥参考 heketi.json 文件
 ```
   heketi-cli  --user admin --server http://<ip1>:10001 --secret admin123 --json cluster create
 ```
@@ -252,7 +253,7 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
     docker exec <container_id> heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 topology load --json=/etc/heketi/topology.json
 
  ```
- kubernetes:
+ kubernetes 方式:
  ```
  kubectl cp topology.json <kubernetes_heketi_pod>:/etc/heketi/ -n kube-system
     kubectl exec -it <kubernetes_heketi_pod> -n kube-system heketi-cli topology load -- --json=/etc/heketi/topology.json --server http://<ip1>:10001 --user admin --secret admin123
