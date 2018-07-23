@@ -219,5 +219,5 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
  ```
  kubernetes 方式:
  ```
- kubectl exec -it <heketi-pod> -n <namespace> heketi-cli topology load -- --server http://<ip1>:10001 --user admin --secret 123456 volume create --size=100 --replica=3 --clusters=d691b29a06374c4da7e94bba71d027bf
+ kubectl exec -it <heketi-pod> -n <namespace> heketi-cli  --server http://<ip1>:10001 --user admin --secret 123456 volume create --size=100 --replica=2 --clusters=d691b29a06374c4da7e94bba71d027bf
  ```
