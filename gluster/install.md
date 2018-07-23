@@ -110,72 +110,11 @@ github:
 yum -y install heketi heketi-client
 ```
 ### 配置 heketi.json
-此处配置文件的位置放在 `/etc/heketi/heketi.json`
-```
-{
-  "_port_comment": "Heketi Server Port Number",
-  "port": "10001",
-
-  "_use_auth": "Enable JWT authorization. Please enable for deployment",
-  "use_auth": true,
-
-  "_jwt": "Private keys for access",
-  "jwt": {
-    "_admin": "Admin has access to all APIs",
-    "admin": {
-      "key": "admin123"
-    },
-    "_user": "User only has access to /volumes endpoint",
-    "user": {
-      "key": "user123"
-    }
-  },
-
-  "_glusterfs_comment": "GlusterFS Configuration",
-  "glusterfs": {
-    "_executor_comment": [
-      "Execute plugin. Possible choices: mock, ssh",
-      "mock: This setting is used for testing and development.",
-      "      It will not send commands to any node.",
-      "ssh:  This setting will notify Heketi to ssh to the nodes.",
-      "      It will need the values in sshexec to be configured.",
-      "kubernetes: Communicate with GlusterFS containers over",
-      "            Kubernetes exec api."
-    ],
-    "executor": "ssh",
-
-    "_sshexec_comment": "SSH username and private key file information",
-    "sshexec": {
-      "keyfile": "/etc/heketi/heketi_key",
-      "user": "root",
-      "port": "Optional: ssh port.  Default is 22",
-      "fstab": "Optional: Specify fstab file on node.  Default is /etc/fstab"
-    },
-
-    "_kubeexec_comment": "Kubernetes configuration",
-    "kubeexec": {
-      "host" :"https://kubernetes.host:8443",
-      "cert" : "/path/to/crt.file",
-      "insecure": false,
-      "user": "kubernetes username",
-      "password": "password for kubernetes user",
-      "namespace": "OpenShift project or Kubernetes namespace",
-      "fstab": "Optional: Specify fstab file on node.  Default is /etc/fstab"
-    },
-
-    "_db_comment": "Database file name",
-    "db": "/dcos/heketi/heketi.db",
-
-    "_loglevel_comment": [
-      "Set log level. Choices are:",
-      "  none, critical, error, warning, info, debug",
-      "Default is warning"
-    ],
-    "loglevel" : "debug"
-  }
-}
-```
-注意:此时如果 /dcos/heketi 下有 heketi.db ,删掉
+此处配置文件的位置放在 `/etc/heketi/heketi.json`  
+[heketi.json](heketi.json)  
+参考地址:
+`https://github.com/heketi/heketi/blob/master/docs/admin/server.md`
+注意: 此时如果 /dcos/heketi 下有 heketi.db ,删掉
 
 ### 配置 ssh
 因为配置文件类指定的是 ssh ,所有要配置 ssh
