@@ -90,7 +90,7 @@ ls -lA /mnt/copy* | wc -l
 ```
  ls -lA /data/brick1/paas/copy*
 ```
-如果没有复制,每个节点都将会只有50个文件
+如果没有复制(即指定 --replica),每个节点都将会只有50个文件
 
 ### 官网相关地址
 github:
