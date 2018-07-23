@@ -170,14 +170,14 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
  heketi-cli --json node add --cluster "8f33e5fab8e337425774edd70addb480"  --management-host-name <ip1> --storage-host-name <ip1> --zone 1
  ```
  照此命令添加ip2的节点  
- 注意此处 <ip1> 必须是 ip地址的数字,否则对接kubernetes 报错  
+ 注意此处 `<ip1>` 必须是 ip地址的数字,否则对接kubernetes 报错  
  3)在每台节点上添加设备
  ```
  heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 --json device add --name="/dev/vdb" --node ="a1423d328d609acc1ddssadc0b6ab4889"
  ```
  `--node` 添加每个节点时生成的,每个节点各不同
 
- 或将 1) 2) 3) 结合为配置文件 [topology.json](topology.json)
+ 或将步骤 1) 2) 3) 结合为配置文件 [topology.json](topology.json)
  ```
    vi /etc/heketi/topology.json
  ```
