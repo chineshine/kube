@@ -177,7 +177,8 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
  ```
  `--node` 添加每个节点时生成的,每个节点各不同
 
- 或将步骤 1) 2) 3) 结合为配置文件 [topology.json](topology.json)
+ 或将步骤 1) 2) 3) 结合为配置文件 [topology.json](topology.json)  
+ 注意修改 ip 地址
  ```
    vi /etc/heketi/topology.json
  ```
