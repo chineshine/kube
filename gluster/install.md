@@ -215,7 +215,7 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
  ```
  容器方式:
  ```
- docker exec 容器ID heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 volume create --size=3 --replica=2 --clusters=<cluster-id>
+ docker exec <container_id> heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 volume create --size=3 --replica=2 --clusters=<cluster-id>
  ```
  kubernetes 方式:
  ```
