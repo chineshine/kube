@@ -1,3 +1,4 @@
+# gluster
 ## 安装 gluster
 ### 前提条件
 1.两个节点  
@@ -100,3 +101,159 @@ github:
 ```
   https://docs.gluster.org/en/latest/Quick-Start-Guide/Quickstart/
 ```
+
+
+# heketi
+假设此时操作都是在 <ip1>
+## 安装
+```
+yum -y install heketi heketi-client
+```
+### 配置 heketi.json
+此处配置文件的位置放在 /etc/heketi/heketi.json
+```
+{
+  "_port_comment": "Heketi Server Port Number",
+  "port": "10001",
+
+  "_use_auth": "Enable JWT authorization. Please enable for deployment",
+  "use_auth": true,
+
+  "_jwt": "Private keys for access",
+  "jwt": {
+    "_admin": "Admin has access to all APIs",
+    "admin": {
+      "key": "admin123"
+    },
+    "_user": "User only has access to /volumes endpoint",
+    "user": {
+      "key": "user123"
+    }
+  },
+
+  "_glusterfs_comment": "GlusterFS Configuration",
+  "glusterfs": {
+    "_executor_comment": [
+      "Execute plugin. Possible choices: mock, ssh",
+      "mock: This setting is used for testing and development.",
+      "      It will not send commands to any node.",
+      "ssh:  This setting will notify Heketi to ssh to the nodes.",
+      "      It will need the values in sshexec to be configured.",
+      "kubernetes: Communicate with GlusterFS containers over",
+      "            Kubernetes exec api."
+    ],
+    "executor": "ssh",
+
+    "_sshexec_comment": "SSH username and private key file information",
+    "sshexec": {
+      "keyfile": "/etc/heketi/heketi_key",
+      "user": "root",
+      "port": "Optional: ssh port.  Default is 22",
+      "fstab": "Optional: Specify fstab file on node.  Default is /etc/fstab"
+    },
+
+    "_kubeexec_comment": "Kubernetes configuration",
+    "kubeexec": {
+      "host" :"https://kubernetes.host:8443",
+      "cert" : "/path/to/crt.file",
+      "insecure": false,
+      "user": "kubernetes username",
+      "password": "password for kubernetes user",
+      "namespace": "OpenShift project or Kubernetes namespace",
+      "fstab": "Optional: Specify fstab file on node.  Default is /etc/fstab"
+    },
+
+    "_db_comment": "Database file name",
+    "db": "/dcos/heketi/heketi.db",
+
+    "_loglevel_comment": [
+      "Set log level. Choices are:",
+      "  none, critical, error, warning, info, debug",
+      "Default is warning"
+    ],
+    "loglevel" : "debug"
+  }
+}
+```
+注意:此时如果 /dcos/heketi 下有 heketi.db ,删掉
+
+### 配置 ssh
+因为配置文件类指定的是 ssh ,所有要配置 ssh
+```
+mkdir /etc/heketi
+ssh-keygen -f /etc/heketi/heketi_key -t rsa -N ''
+#chown heketi:heketi /etc/heketi/heketi_key*
+```
+拷贝密钥
+```
+ssh-copy-id -i /etc/heketi/heketi_key.pub root@<ip2>
+```
+上面步骤操作等同于
+```
+scp /etc/heketi/heketi_key.pub root@<ip2>:/tmp
+ssh root@<ip2>
+cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
+```
+
+### 启动
+```
+  systemctl enable heketi && systemctl start heketi
+```
+用`systemctl`本作者操作未成功,直接使用命令启动
+```
+  nohup heketi --config /etc/heketi/Heketi.json &
+```
+
+### 访问测试
+```
+  curl http://localhost:10001/hello
+```
+### heketi-cli
+1)创建 cluster
+```
+  heketi-cli  --user admin --server http://<ip1>:10001 --secret admin123 --json cluster create
+```
+ 生成 结果如下:
+ ```
+ {"id":"8f33e5fab8e337425774edd70addb480","nodes":[],"volumes":[],"block":true,"file":true,"blockvolumes":[]}
+ ```
+ 上面 id 是接下来要使用的,忘了也没关系,可查找
+ ```
+   heketi-cli cluster list
+ ```
+ 不过默认请求的是 8080 端口,且需要指定用户和密钥
+ ```
+ heketi-cli cluster list --server  http://<ip1>:10001 --user admin --secret admin123
+ ```
+2)添加节点
+ ```
+ heketi-cli --json node add --cluster "8f33e5fab8e337425774edd70addb480"  --management-host-name <ip1> --storage-host-name <ip1> --zone 1
+ ```
+ 照此命令添加ip2的节点  
+ 注意此处 <ip1> 必须是 ip地址的数字,否则对接kubernetes 报错  
+ 3)在每台节点上添加设备
+ ```
+ heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 --json device add --name="/dev/vdb" --node ="a1423d328d609acc1ddssadc0b6ab4889"
+ ```
+ `--node` 添加每个节点时生成的,每个节点各不同
+
+ 或将 1) 2) 3) 结合为配置文件 [topology.json](topology.json)
+ ```
+   vi /etc/heketi/topology.json
+ ```
+以配置文件方式添加
+ ```
+ heketi-cli --server http://<ip1>:10001 --user admin --secret 123456 topology load --json=/etc/heketi/topology.json
+ ```
+ 容器方式:  
+ `<container_id>` -> 容器的 ID
+ ```
+ docker cp topology.json <container_id>:/etc/heketi/
+    docker exec <container_id> heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 topology load --json=/etc/heketi/topology.json
+
+ ```
+ kubernetes:
+ ```
+ kubectl cp topology.json <kubernetes_heketi_pod>:/etc/heketi/ -n kube-system
+    kubectl exec -it <kubernetes_heketi_pod> -n kube-system heketi-cli topology load -- --json=/etc/heketi/topology.json --server http://<ip1>:10001 --user admin --secret admin123
+ ```
