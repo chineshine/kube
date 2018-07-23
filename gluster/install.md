@@ -221,7 +221,7 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
  ```
    heketi-cli cluster list
  ```
- 不过默认请求的是 8080 端口,且需要指定用户和密钥
+ 由于默认请求的是 8080 端口,且需要指定用户和密钥
  ```
  heketi-cli cluster list --server  http://<ip1>:10001 --user admin --secret admin123
  ```
@@ -256,4 +256,27 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
  ```
  kubectl cp topology.json <kubernetes_heketi_pod>:/etc/heketi/ -n kube-system
     kubectl exec -it <kubernetes_heketi_pod> -n kube-system heketi-cli topology load -- --json=/etc/heketi/topology.json --server http://<ip1>:10001 --user admin --secret admin123
+ ```
+
+### 创建 volume
+ 命令详情请参照:
+ ```
+   heketi-cli volume create --help
+
+--size 单位为 Gi
+--replica 副本数,不指定默认为3
+--server heketi 服务,默认是 http://localhost:8080 ,可以通过环境变量 HEKETI_CLI_SERVER 设置
+--cluster 可以同 "," 指定多个
+ ```
+直接方式:
+ ```
+ heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 volume create --size=100 --replica=2 --clusters=<cluster-id>
+ ```
+ 容器方式:
+ ```
+ docker exec 容器ID heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 volume create --size=3 --replica=2 --clusters=<cluster-id>
+ ```
+ kubernetes 方式:
+ ```
+ kubectl exec -it <heketi-pod> -n <namespace> heketi-cli topology load -- --server http://<ip1>:10001 --user admin --secret 123456 volume create --size=100 --replica=3 --clusters=d691b29a06374c4da7e94bba71d027bf
  ```
