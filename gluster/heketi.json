@@ -30,12 +30,12 @@
     ],
     "executor": "ssh",
 
-    "_sshexec_comment": "SSH username and private key file information",
+    "_sshexec_comment": "SSH username and private key file information,you must edit port and fstab,do not follow official,or you will not start heketi and use heketi-client,from chineshine",
     "sshexec": {
       "keyfile": "/etc/heketi/heketi_key",
       "user": "root",
-      "port": "Optional: ssh port.  Default is 22",
-      "fstab": "Optional: Specify fstab file on node.  Default is /etc/fstab"
+      "port": "22",
+      "fstab": "/etc/fstab"
     },
 
     "_kubeexec_comment": "Kubernetes configuration",

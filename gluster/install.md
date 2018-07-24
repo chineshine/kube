@@ -142,7 +142,10 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
 ```
   nohup heketi --config /etc/heketi/Heketi.json &
 ```
-
+本作者找到启动失败的原因了,SSH 问题,建议检查一下
+```
+  ssh -i /etc/heketi/heketi_key
+```
 ### 访问测试
 ```
   curl http://localhost:10001/hello
