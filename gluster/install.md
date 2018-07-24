@@ -146,6 +146,7 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
 ```
   ssh -i /etc/heketi/heketi_key
 ```
+注意 heketi.json 中,ssh配置那块,port 和 fstab 一定不要不管,否则后面 heketi起不来,而且,heketi-cli 也用不了
 ### 访问测试
 ```
   curl http://localhost:10001/hello
