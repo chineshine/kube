@@ -146,18 +146,34 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
 ```
   ssh -i /etc/heketi/heketi_key
 ```
-注意 heketi.json 中,ssh配置那块,port 和 fstab 一定不要不管,否则后面 heketi起不来,而且,heketi-cli 也用不了
+注意 heketi.json 中,ssh 配置那块,port 和 fstab 一定不要不管,否则后面 heketi起不来,而且,heketi-cli 也用不了
 ### 访问测试
 ```
   curl http://localhost:10001/hello
 ```
 ### heketi-cli
+先创建三个环境变量,在 `/etc/profile.d` 目录创建自定义环境变量文件,如
+```
+  vi /etc/profile.d/env.sh
+
+  export HEKETI_CLI_SERVER=http://172.21.1.160:10001
+  export HEKETI_CLI_USER=admin
+  export HEKETI_CLI_KEY=admin123
+```
+这三个环境变量分别对应 `heketi-cli` 的三个参数:
+```
+  参数的值都配置在 heketi.json 文件中
+  --server # 服务器地址 如 http://<ip1>:10001
+  --user   # 用户 如 admin
+  --secret # 密钥 如 admin123
+```
 1)创建 cluster  
 用户和密钥参考 heketi.json 文件
+`--json` 参数代表以 json 格式输出
 ```
-  heketi-cli  --user admin --server http://<ip1>:10001 --secret admin123 --json cluster create
+  heketi-cli cluster create --json
 ```
- 生成 结果如下:
+ 生成结果如下:
  ```
  {"id":"8f33e5fab8e337425774edd70addb480","nodes":[],"volumes":[],"block":true,"file":true,"blockvolumes":[]}
  ```
@@ -165,63 +181,59 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
  ```
    heketi-cli cluster list
  ```
- 由于默认请求的是 8080 端口,且需要指定用户和密钥
+ 此处已经配置环境变量,故而无需指定三个参数,如果不指定,由于默认请求的是 8080 端口,且需要指定用户和密钥
  ```
  heketi-cli cluster list --server  http://<ip1>:10001 --user admin --secret admin123
  ```
+
 2)添加节点
  ```
- heketi-cli --json node add --cluster "8f33e5fab8e337425774edd70addb480"  --management-host-name <ip1> --storage-host-name <ip1> --zone 1
+ heketi-cli node add --cluster "8f33e5fab8e337425774edd70addb480"  --management-host-name <ip1> --storage-host-name <ip1> --zone 1
  ```
- 照此命令添加ip2的节点  
- 注意此处 `<ip1>` 必须是 ip地址的数字,否则对接kubernetes 报错  
+ 照此命令添加ip2的节点,注意此处 `<ip1>` 必须是 ip地址的数字,否则对接kubernetes 报错  
  3)在每台节点上添加设备
  ```
- heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 --json device add --name="/dev/vdb" --node ="a1423d328d609acc1ddssadc0b6ab4889"
+ heketi-cli device add --name=/dev/vdb --node ="a1423d328d609acc1ddssadc0b6ab4889"
  ```
- `--node` 添加每个节点时生成的,每个节点各不同
+ `--node` 是添加每个节点时生成的值,每个节点各不同
 
- 或将步骤 1) 2) 3) 结合为配置文件 [topology.json](topology.json)  
+ 上述步骤 1) 2) 3) 可结合为配置文件  
+  [topology.json](topology.json)  
  注意修改 ip 地址
  ```
    vi /etc/heketi/topology.json
  ```
 以配置文件方式添加
  ```
- heketi-cli --server http://<ip1>:10001 --user admin --secret 123456 topology load --json=/etc/heketi/topology.json
+ heketi-cli topology load --json=/etc/heketi/topology.json
  ```
- 容器方式:  
- `<container_id>` -> 容器的 ID
- ```
- docker cp topology.json <container_id>:/etc/heketi/
-    docker exec <container_id> heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 topology load --json=/etc/heketi/topology.json
+@Note: 此处由于安装 gluster 被官方文档骗了一下,`mount`了目录`/data/brick1`,将此目录 `umount`掉  
+```
+  gluster volume stop paas
+  gluster volume delete paas
+```
+先停掉正在运行的 volume,并删除,然后 `umount`
+```
+umount /data/brick1
+```
+再修改 `/etc/fstab`,将向前添加的注掉
+```
+  vi /etc/fstab  
 
- ```
- kubernetes 方式:
- ```
- kubectl cp topology.json <kubernetes_heketi_pod>:/etc/heketi/ -n kube-system
-    kubectl exec -it <kubernetes_heketi_pod> -n kube-system heketi-cli topology load -- --json=/etc/heketi/topology.json --server http://<ip1>:10001 --user admin --secret admin123
- ```
+  #/dev/vdb /data/brick1 xfs defaults 1 2
+```
 
 ### 创建 volume
  命令详情请参照:
  ```
    heketi-cli volume create --help
 
---size 单位为 Gi
---replica 副本数,不指定默认为3
---server heketi 服务,默认是 http://localhost:8080 ,可以通过环境变量 HEKETI_CLI_SERVER 设置
---cluster 可以同 "," 指定多个
+--size     # 单位为 Gi
+--replica  # 副本数,不指定默认为3
+--server   # heketi 服务
+--cluster  # 集群id  可以同 "," 指定多个
  ```
 直接方式:
  ```
- heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 volume create --size=100 --replica=2 --clusters=<cluster-id>
- ```
- 容器方式:
- ```
- docker exec <container_id> heketi-cli --server http://<ip1>:10001 --user admin --secret admin123 volume create --size=3 --replica=2 --clusters=<cluster-id>
- ```
- kubernetes 方式:
- ```
- kubectl exec -it <heketi-pod> -n <namespace> heketi-cli  --server http://<ip1>:10001 --user admin --secret 123456 volume create --size=100 --replica=2 --clusters=d691b29a06374c4da7e94bba71d027bf
+ heketi-cli volume create --size=100 --replica=2 --clusters=<cluster-id>
  ```
