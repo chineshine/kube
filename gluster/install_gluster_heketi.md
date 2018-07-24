@@ -227,7 +227,7 @@ umount /data/brick1
 ```
   heketi-cli device add --name=/dev/vdb --node =a1423d328d609acc1ddssadc0b6ab4889 --destroy-existing-data
 ```
-参数`--destroy-existing-data` 官方给出此操作是危险的,由于是第一次安装,反正没有数据,就无所谓了
+参数`--destroy-existing-data` 官方给出此操作是危险的,由于是第一次安装,反正没有数据,无所谓了
 
 ### 创建 volume
  命令详情请参照:

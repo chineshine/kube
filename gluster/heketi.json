@@ -30,7 +30,7 @@
     ],
     "executor": "ssh",
 
-    "_sshexec_comment": "SSH username and private key file information,you must edit port and fstab,do not follow official,or you will not start heketi and use heketi-client,from chineshine",
+    "_sshexec_comment": "SSH username and private key file information,you must edit port and fstab,do not follow official,or you will not start heketi or use heketi-client.From chineshine",
     "sshexec": {
       "keyfile": "/etc/heketi/heketi_key",
       "user": "root",
