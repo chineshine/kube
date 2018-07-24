@@ -50,6 +50,7 @@
     },
 
     "_db_comment": "Database file name",
+    "brick_min_size_gb":1,
     "db": "/dcos/heketi/heketi.db",
 
     "_loglevel_comment": [
