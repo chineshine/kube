@@ -244,5 +244,12 @@ umount /data/brick1
  ```
 直接方式:
  ```
- heketi-cli volume create --size=100 --replica=2 --clusters=<cluster-id>
+ heketi-cli volume create --size=10 --replica=2 --clusters=2fb57eb854e23869d82748055fce226b
  ```
+
+ ### 配置 StoregeClass 和 pvc
+ base64 密码获取
+ ```
+   echo -n "mypassword"|base64
+ ```
+ [heketi-Kubernetes.yaml](./heketi-Kubernetes.yaml)
