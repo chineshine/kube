@@ -4,7 +4,11 @@
 ```
   wget https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz
 ```
-解压后将文件 helm 移动到 /usr/local/bin
+解压
+```
+  tar -zxvf helm-v2.9.1-linux-amd64.tar.gz
+```
+将文件 helm 移动到 /usr/local/bin
 ```
   mv helm /usr/local/bin
 ```
