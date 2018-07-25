@@ -247,7 +247,7 @@ umount /data/brick1
  heketi-cli volume create --size=10 --replica=2 --clusters=2fb57eb854e23869d82748055fce226b
  ```
 
- ### 配置 StoregeClass 和 pvc
+ ### 配置 StoregeClass 和 secret
  base64 密码获取
  ```
    echo -n "mypassword"|base64
