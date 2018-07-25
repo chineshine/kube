@@ -160,6 +160,9 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
   export HEKETI_CLI_USER=admin
   export HEKETI_CLI_KEY=admin123
 ```
+```
+  source /etc/profile.d/env.sh
+```
 这三个环境变量分别对应 `heketi-cli` 的三个参数:
 ```
   参数的值都配置在 heketi.json 文件中
