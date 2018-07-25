@@ -156,7 +156,7 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
 ```
   vi /etc/profile.d/env.sh
 
-  export HEKETI_CLI_SERVER=http://172.21.1.160:10001
+  export HEKETI_CLI_SERVER=http://<ip1>:10001
   export HEKETI_CLI_USER=admin
   export HEKETI_CLI_KEY=admin123
 ```
@@ -219,7 +219,7 @@ cat /tmp/heketi_key.pub >> /root/.ssh/authorized_keys
 ```
 umount /data/brick1
 ```
-再修改 `/etc/fstab`,将向前添加的注掉
+再修改 `/etc/fstab`,将前面添加的内容注掉
 ```
   vi /etc/fstab  
 
