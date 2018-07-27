@@ -64,11 +64,12 @@ systemctl enable kubelet && systemctl start kubelet
 ```
   kubeadm init --config kubeadm.yaml
 ```
-kubeadm.yaml 注意相关配置  
+[kubeadm.yaml](kubeadm.yaml) 注意相关配置  
 note :   
 如果不使用该配置文件,则安装会使用 k8s 相关镜像,开头为:k8s.gcr.io  
-需要翻墙下载,或事先下载好,  
-如果名称改掉了,使用配置文件,去指定镜像  
+镜像需要翻墙下载,或事先下载好,如果名称改掉了,使用配置文件,去指定镜像  
+如使用配置文件,所有参数都要在配置文件中,除了 `--config`,无法再接任何参数
+
 运行成功会打印日志,类似如下 :
 ```
 To start using your cluster, you need to run the following as a regular user:
@@ -82,7 +83,7 @@ You can now join any number of machines by running the following on each node
 as root:
   kubeadm join 10.0.100.202:6443 --token thczis.64adx0imeuhu23xv --discovery-token-ca-cert-hash sha256:fa7b11bb569493fd44554aab0afe55a4c051cccc492dbdfafae6efeb6ffa80e6
 ```
-接下来运行命令 :
+接下来运行 :
 ```
   mkdir -p $HOME/.kube
   sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -158,7 +159,13 @@ cat /var/lib/kubelet/kubeadm-flags.env
 ```
 ### 日志追踪查看
 ```
-journalctl -u kubelet.service -af
-# 或 土一点的方式
-tail -n 100 /var/log/message
+  journalctl -u kubelet.service -af
+```
+或
+```
+  journalctl -xe
+```
+或 土一点的方式
+```
+  tail -n 100 /var/log/message
 ```
