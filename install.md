@@ -1,27 +1,41 @@
 ## 相关设置
+
 #### 1) 关闭虚拟内存
-``` swapoff -a ```  
-永久关闭 ：    
-文件 ： ``` /etc/fstab ```  
-注掉该行 :
+
 ```
-  #/dev/mapper/centos-swap swap swap  defaults   0 0
+  swapoff -a
+```  
+或永久关闭 ：    
+ ```
+  vi /etc/fstab
+  # /dev/mapper/centos-swap swap swap  defaults   0 0
 ```  
 
 #### 2) 关闭 seLinux
-``` setenforce 0 ```    
-永久关闭 :   
-文件：``` /etc/sysconfig/selinux```   
-将 ``` SELinux=enforcing ``` 修改为 ``` SELinux=disabled ```  
+
+```
+  setenforce 0
+```
+或永久关闭 :   
+```
+  vi /etc/sysconfig/selinux
+
+  SELinux=enforcing =修改为=> SELinux=disabled
+```
 
 #### 3) 修改配置
-文件: ``` /etc/sysctl.conf ```  
-添加如下两行 :   
+
+修改配置添加两条记录  
 ```
+  vi /etc/sysctl.conf
+
   net.bridge.bridge-nf-call-iptables = 1
   net.bridge.bridge-nf-call-ip6tables = 1
 ```
-运行命令: ```sysctl -p```  
+```
+  sysctl -p
+```
+
 ## 配置 yum 源
 此处使用的是阿里的源  
 地址 : https://opsx.alibaba.com/mirror
