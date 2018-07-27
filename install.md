@@ -8,7 +8,7 @@
 或永久关闭 ：    
  ```
   vi /etc/fstab
-    
+
   # /dev/mapper/centos-swap swap swap  defaults   0 0
 ```  
 
@@ -121,6 +121,8 @@ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documen
 kubectl apply -f rbac-kdd.yaml
 kubectl apply -f calico.yaml
 ```
+[rbac-kdd.yaml](./calico/rbac-kdd.yaml)  
+[calico.yaml](./calico/calico.yaml)
 
 ## 相关问题解决
 ### 出错如何重置
