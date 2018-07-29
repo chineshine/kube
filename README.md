@@ -10,7 +10,10 @@ helm ==> helm 相关内容
   rbac-config.yaml --> rbac 配置文件  
 
 gluster ==> 存储系统 gluster 相关内容  
-  install -> 安装手册  
-  issue -> 操作过程遇到的错误
+  install_gluster_heketi.md -> 安装gluster 和 heketi (已验证)   
+  issue -> 操作过程遇到的错误  
+  topology.json -> heketi-cli 启动集群配置文件  
+  heketi.json -> 启动 heketi  的配置文件  
+  heketi-kubernetes.yaml -> heketi 与 kubernetes 结合配置 storageClass 的配置文件  
 
-calico ==> calico 网络相关内容
+calico ==> calico 网络配置
