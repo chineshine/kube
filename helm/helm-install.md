@@ -14,6 +14,7 @@
 ```
 
 #### 配置 RBAC
+ [rbac-config.yaml](rbac-config.yaml)
 ```
 kubectl create -f rbac-config.yaml
 ```
