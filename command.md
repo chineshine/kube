@@ -13,6 +13,11 @@
 ```
   kubectl -n chine set image deployment/nginx nginx=nginx:7
 ```
+查看镜像名称
+```
+  kubectl -n <namespace> get deploy -o wide
+```
+在 containers 那一列就是镜像名称
 
 #### log/logs 命令
 官方建议用 logs,将逐渐取代 log
@@ -21,3 +26,11 @@
   <pod_name>: pod 的名称
 ```
 该命令只能用于 pod
+
+#### describe
+用于描述 pod ,deploy 等的详细信息,包括报错信息
+```
+  kubectl -n <namespace> <type> <name>
+  <type>: 如 pod,deploy,ingress 等
+  <name>: 如 pod 的名称,deploy 的名称等
+```
