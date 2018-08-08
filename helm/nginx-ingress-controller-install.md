@@ -5,7 +5,7 @@ search 找一下
 ```
 fetch 下来
 ```
-  helm fetch nginx-ingress
+  helm fetch stable/nginx-ingress
 ```
 进入 values.yml 文件所在目录  
 ```
