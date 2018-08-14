@@ -34,3 +34,7 @@
   <type>: 如 pod,deploy,ingress 等
   <name>: 如 pod 的名称,deploy 的名称等
 ```
+#### 查看 kubernetes 账号密码
+```
+  kubectl config view
+```
