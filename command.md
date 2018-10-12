@@ -49,3 +49,8 @@
 ```
   kubectl -n <namespace> exec <pod_name> -c <container_name> -it bash
 ```
+
+#### 参考地址
+```
+  https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
+```
